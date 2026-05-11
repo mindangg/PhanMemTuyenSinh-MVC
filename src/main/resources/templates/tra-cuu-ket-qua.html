@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container mt-4">
+    <h4 class="fw-bold mb-1"><i class="bi bi-search me-2"></i>Kết quả xét tuyển</h4>
+    <p class="text-muted mb-4">
+        Thí sinh: <strong th:text="${thiSinh.ho} + ' ' + ${thiSinh.ten}">Họ tên</strong> &nbsp;|&nbsp;
+        CCCD: <strong th:text="${thiSinh.cccd}">CCCD</strong> &nbsp;|&nbsp;
+        Ngày sinh: <strong th:text="${thiSinh.ngaySinh}">NgaySinh</strong>
+    </p>
+
+    <div th:if="${#lists.isEmpty(ketQuaList)}" class="alert alert-warning">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        Không tìm thấy thông tin nguyện vọng xét tuyển của thí sinh này.
+    </div>
+
+    <div th:unless="${#lists.isEmpty(ketQuaList)}" class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th class="text-center" style="width:60px">NV</th>
+                    <th>Ngành</th>
+                    <th>Tổ hợp môn</th>
+                    <th>Phương thức</th>
+                    <th class="text-center">Điểm XT</th>
+                    <th class="text-center">Điểm chuẩn</th>
+                    <th class="text-center">Kết quả</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="kq : ${ketQuaList}">
+                    <td class="text-center fw-bold" th:text="${kq.thuTuNguyenVong}">1</td>
+                    <td>
+                        <span class="fw-semibold" th:text="${kq.tenNganh}">Tên ngành</span><br>
+                        <small class="text-muted" th:text="${kq.maNganh}">MN</small>
+                    </td>
+                    <td th:text="${kq.toHopMon}">A00</td>
+                    <td th:text="${kq.phuongThuc}">THPT</td>
+                    <td class="text-center fw-bold">
+                        <span th:if="${kq.diemXetTuyen != null}"
+                              th:text="${#numbers.formatDecimal(kq.diemXetTuyen, 0, 2)}">25.50</span>
+                        <span th:if="${kq.diemXetTuyen == null}" class="text-muted">—</span>
+                    </td>
+                    <td class="text-center">
+                        <span th:if="${kq.diemTrungTuyen != null}"
+                              th:text="${#numbers.formatDecimal(kq.diemTrungTuyen, 0, 2)}">24.00</span>
+                        <span th:if="${kq.diemTrungTuyen == null}" class="text-muted">Chưa công bố</span>
+                    </td>
+                    <td class="text-center">
+                        <span th:if="${kq.ketQua == '1' or kq.ketQua == 'T' or kq.ketQua == 'TRUNG_TUYEN'}"
+                              class="badge bg-success fs-6">
+                            <i class="bi bi-check-circle me-1"></i>Trúng tuyển
+                        </span>
+                        <span th:if="${kq.ketQua != null and kq.ketQua != '' and kq.ketQua != '1' and kq.ketQua != 'T' and kq.ketQua != 'TRUNG_TUYEN'}"
+                              class="badge bg-danger fs-6">
+                            <i class="bi bi-x-circle me-1"></i>Không trúng tuyển
+                        </span>
+                        <span th:if="${kq.ketQua == null or kq.ketQua == ''}" class="badge bg-secondary">
+                            Chưa có KQ
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <a th:href="@{/logout}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
+        </a>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:replace="~{fragments/footer :: scripts}"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phần mềm Tuyển sinh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand { font-weight: 700; }
+        body { background: #f8f9fa; }
+        .card { border-radius: 12px; }
+        .result-box { border-left: 4px solid #0d6efd; }
+        .score-big { font-size: 2.5rem; font-weight: 700; color: #0d6efd; }
+    </style>
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">
+            <i class="bi bi-mortarboard-fill me-2"></i>Tuyển sinh
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/tinh-diem/dgnl}">
+                        <i class="bi bi-calculator me-1"></i>Tính điểm ĐGNL
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/tinh-diem/thpt-vsat}">
+                        <i class="bi bi-calculator me-1"></i>Tính điểm THPT/VSAT
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <th:block th:if="${session.thiSinh != null}">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tra-cuu-ket-qua}">
+                            <i class="bi bi-search me-1"></i>Tra cứu kết quả
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link text-warning">
+                            <i class="bi bi-person-fill me-1"></i>
+                            <span th:text="${session.thiSinh.ho} + ' ' + ${session.thiSinh.ten}">Họ tên</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/logout}">
+                            <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
+                        </a>
+                    </li>
+                </th:block>
+                <th:block th:if="${session.thiSinh == null}">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">
+                            <i class="bi bi-person-fill me-1"></i>Đăng nhập
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-circle" style="font-size:3rem;color:#0d6efd"></i>
+                    <h4 class="fw-bold mt-2">Đăng nhập Thí sinh</h4>
+                    <p class="text-muted small">Dùng để tra cứu kết quả xét tuyển</p>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i><span th:text="${error}"></span>
+                </div>
+
+                <form th:action="@{/login}" th:object="${loginForm}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Số CCCD <span class="text-danger">*</span></label>
+                        <input type="text" th:field="*{cccd}" class="form-control"
+                               placeholder="Nhập số căn cước công dân" required maxlength="12">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mật khẩu (ngày sinh ddMMyyyy) <span class="text-danger">*</span></label>
+                        <input type="password" th:field="*{password}" class="form-control"
+                               placeholder="VD: sinh 15/03/2003 → 15032003" required maxlength="8">
+                        <div class="form-text">8 số ngày sinh: dd (ngày) MM (tháng) yyyy (năm)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
+                    </button>
+                </form>
+
+                <hr class="my-3">
+                <p class="text-center text-muted small mb-0">
+                    Chưa cần đăng nhập? Bạn có thể
+                    <a th:href="@{/tinh-diem/dgnl}">tính điểm ĐGNL</a> hoặc
+                    <a th:href="@{/tinh-diem/thpt-vsat}">tính điểm THPT/VSAT</a>
+                    mà không cần tài khoản.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script th:replace="~{fragments/footer :: scripts}"></script>
+</body>
+</html>
