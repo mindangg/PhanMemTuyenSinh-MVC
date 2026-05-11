@@ -7,9 +7,12 @@ import com.tuyensinh.web.repository.NganhRepository;
 import com.tuyensinh.web.repository.NguyenVongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TraCuuKetQuaService {
@@ -20,12 +23,23 @@ public class TraCuuKetQuaService {
     @Autowired
     private NganhRepository nganhRepository;
 
+    @Transactional(readOnly = true)
     public List<KetQuaTraCuuVO> traKetQua(String cccd) {
         List<NguyenVongXetTuyen> danhSach = nguyenVongRepository.findByCccdOrderByThuTuNguyenVongAsc(cccd);
-        List<KetQuaTraCuuVO> result = new ArrayList<>();
+        if (danhSach.isEmpty()) return List.of();
 
+        // Batch load tất cả ngành cần thiết trong 1 query thay vì N queries
+        List<String> maNganhList = danhSach.stream()
+                .map(NguyenVongXetTuyen::getMaNganh)
+                .distinct()
+                .collect(Collectors.toList());
+        Map<String, Nganh> nganhMap = nganhRepository.findByMaNganhIn(maNganhList)
+                .stream()
+                .collect(Collectors.toMap(Nganh::getMaNganh, n -> n));
+
+        List<KetQuaTraCuuVO> result = new ArrayList<>();
         for (NguyenVongXetTuyen nv : danhSach) {
-            Nganh nganh = nganhRepository.findByMaNganh(nv.getMaNganh()).orElse(null);
+            Nganh nganh = nganhMap.get(nv.getMaNganh());
             KetQuaTraCuuVO vo = new KetQuaTraCuuVO();
             vo.setThuTuNguyenVong(nv.getThuTuNguyenVong());
             vo.setMaNganh(nv.getMaNganh());

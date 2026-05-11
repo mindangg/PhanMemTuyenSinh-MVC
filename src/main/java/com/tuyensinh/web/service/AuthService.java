@@ -4,6 +4,7 @@ import com.tuyensinh.web.entity.ThiSinh;
 import com.tuyensinh.web.repository.ThiSinhRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -16,6 +17,7 @@ public class AuthService {
      * Ví dụ: sinh 15/03/2003 → password "15032003".
      * @return ThiSinh nếu đăng nhập đúng, null nếu sai.
      */
+    @Transactional(readOnly = true)
     public ThiSinh login(String cccd, String password) {
         if (cccd == null || cccd.isBlank() || password == null || password.isBlank()) {
             return null;

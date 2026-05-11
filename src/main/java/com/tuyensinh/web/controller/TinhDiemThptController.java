@@ -8,6 +8,8 @@ import com.tuyensinh.web.repository.NganhRepository;
 import com.tuyensinh.web.repository.NganhToHopRepository;
 import com.tuyensinh.web.service.QuyDoiService;
 import com.tuyensinh.web.service.TinhDiemXetTuyenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/tinh-diem")
 public class TinhDiemThptController {
+
+    private static final Logger log = LoggerFactory.getLogger(TinhDiemThptController.class);
 
     @Autowired private TinhDiemXetTuyenService tinhDiemService;
     @Autowired private NganhRepository nganhRepository;
@@ -46,7 +50,9 @@ public class TinhDiemThptController {
         for (String maMon : DS_MON) {
             String val = allParams.get("mon_" + maMon);
             if (val != null && !val.isBlank()) {
-                try { diemMon.put(maMon, Double.parseDouble(val)); } catch (NumberFormatException ignored) {}
+                try { diemMon.put(maMon, Double.parseDouble(val)); } catch (NumberFormatException e) {
+                    log.warn("Điểm môn {} không hợp lệ, bỏ qua giá trị: '{}'", maMon, val);
+                }
             }
         }
         form.setDiemCacMon(diemMon);

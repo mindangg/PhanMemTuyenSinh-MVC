@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Quy đổi điểm V-SAT → thang 10, ĐGNL → thang 30, TA chứng chỉ → điểm.
@@ -70,46 +69,18 @@ public class QuyDoiService {
 
     public enum MucChungChi { MUC1, MUC2, MUC3 }
 
-    // Điểm quy đổi môn Tiếng Anh khi THXT có TA
-    private static final Map<MucChungChi, Double> DIEM_QD_TA_CO_MON = Map.of(
-            MucChungChi.MUC1, 8.0,
-            MucChungChi.MUC2, 9.0,
-            MucChungChi.MUC3, 10.0
-    );
-
-    // Điểm cộng khi THXT KHÔNG có môn TA (thang 30 - THPT)
-    private static final Map<MucChungChi, Double> DIEM_CONG_TA_KHONG_MON_THPT = Map.of(
-            MucChungChi.MUC1, 1.0,
-            MucChungChi.MUC2, 1.5,
-            MucChungChi.MUC3, 2.0
-    );
-
-    // Điểm cộng ĐGNL (thang 1200) khi không có môn TA
-    private static final Map<MucChungChi, Double> DIEM_CONG_TA_KHONG_MON_DGNL = Map.of(
-            MucChungChi.MUC1, 40.0,
-            MucChungChi.MUC2, 60.0,
-            MucChungChi.MUC3, 80.0
-    );
-
-    /**
-     * Trả về điểm môn Tiếng Anh quy đổi từ chứng chỉ (khi tổ hợp có TA).
-     */
+    /** Trả về điểm môn Tiếng Anh quy đổi từ chứng chỉ (khi tổ hợp có TA). */
     public double taChungChiToMon(MucChungChi muc) {
-        return DIEM_QD_TA_CO_MON.getOrDefault(muc, 0.0);
+        return DiemCongTaConstants.DIEM_QD_MON.getOrDefault(muc, 0.0);
     }
 
-    /**
-     * Trả về điểm cộng TA vào THXT (thang 30) khi tổ hợp KHÔNG có môn TA.
-     */
+    /** Trả về điểm cộng TA vào THXT (thang 30) khi tổ hợp KHÔNG có môn TA. */
     public double taChungChiToDiemCongThpt(MucChungChi muc) {
-        return DIEM_CONG_TA_KHONG_MON_THPT.getOrDefault(muc, 0.0);
+        return DiemCongTaConstants.DIEM_CONG_THPT.getOrDefault(muc, 0.0);
     }
 
-    /**
-     * Trả về điểm cộng TA cho ĐGNL (thang 1200) khi tổ hợp KHÔNG có môn TA.
-     * Caller cần quy đổi về thang 30 sau khi cộng vào điểm ĐGNL.
-     */
+    /** Trả về điểm cộng TA cho ĐGNL (thang 1200) khi tổ hợp KHÔNG có môn TA. */
     public double taChungChiToDiemCongDgnl(MucChungChi muc) {
-        return DIEM_CONG_TA_KHONG_MON_DGNL.getOrDefault(muc, 0.0);
+        return DiemCongTaConstants.DIEM_CONG_DGNL.getOrDefault(muc, 0.0);
     }
 }

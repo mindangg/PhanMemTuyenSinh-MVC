@@ -9,6 +9,7 @@ import com.tuyensinh.web.repository.NganhRepository;
 import com.tuyensinh.web.repository.NganhToHopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,9 @@ import java.util.Map;
 @Service
 public class TinhDiemXetTuyenService {
 
+    private static final double DIEM_CONG_TOI_DA = 3.0;
+    private static final double DIEM_XET_TUYEN_TOI_DA = 30.0;
+
     @Autowired private NganhRepository nganhRepository;
     @Autowired private NganhToHopRepository nganhToHopRepository;
     @Autowired private QuyDoiService quyDoiService;
@@ -26,6 +30,7 @@ public class TinhDiemXetTuyenService {
 
     // ========= ĐGNL =========
 
+    @Transactional(readOnly = true)
     public KetQuaTinhDiem tinhDiemDgnl(DgnlForm form) {
         KetQuaTinhDiem result = new KetQuaTinhDiem();
         result.setPhuongThuc("ĐGNL");
@@ -50,7 +55,7 @@ public class TinhDiemXetTuyenService {
         // Điểm cộng tự bổ sung
         double dcBoSung = form.getDiemCongBoSung() != null ? form.getDiemCongBoSung() : 0;
         // Tổng ĐC, cap 3 điểm
-        double dc = Math.min(3.0, dcTA + dcBoSung);
+        double dc = Math.min(DIEM_CONG_TOI_DA, dcTA + dcBoSung);
         result.setDiemCong(round2(dc));
 
         // 4. Điểm ưu tiên
@@ -58,7 +63,7 @@ public class TinhDiemXetTuyenService {
         result.setDiemUuTien(round2(dut));
 
         // 5. Điểm xét tuyển = ĐTHGXT + ĐC + ĐƯT, max 30
-        double dxt = Math.min(30.0, dthgxt + dc + dut);
+        double dxt = Math.min(DIEM_XET_TUYEN_TOI_DA, dthgxt + dc + dut);
         result.setDiemXetTuyen(round2(dxt));
 
         // 6. So sánh ngưỡng và điểm trúng tuyển
@@ -73,6 +78,7 @@ public class TinhDiemXetTuyenService {
 
     // ========= THPT / VSAT =========
 
+    @Transactional(readOnly = true)
     public List<KetQuaTinhDiem> tinhDiemThptVsat(ThptVsatForm form) {
         List<KetQuaTinhDiem> results = new ArrayList<>();
         boolean isVsat = "VSAT".equalsIgnoreCase(form.getPhuongThuc());
@@ -141,7 +147,7 @@ public class TinhDiemXetTuyenService {
                 }
             }
             double dcBoSung = form.getDiemCongBoSung() != null ? form.getDiemCongBoSung() : 0;
-            double dc = Math.min(3.0, dcTA + dcBoSung);
+            double dc = Math.min(DIEM_CONG_TOI_DA, dcTA + dcBoSung);
             r.setDiemCong(round2(dc));
 
             // Điểm ưu tiên
@@ -149,7 +155,7 @@ public class TinhDiemXetTuyenService {
             r.setDiemUuTien(round2(dut));
 
             // Điểm xét tuyển
-            double dxt = Math.min(30.0, dthgxt + dc + dut);
+            double dxt = Math.min(DIEM_XET_TUYEN_TOI_DA, dthgxt + dc + dut);
             r.setDiemXetTuyen(round2(dxt));
 
             // So sánh ngưỡng

@@ -11,6 +11,10 @@ import java.util.Map;
 @Service
 public class UuTienService {
 
+    private static final double NGUONG_GIAM_UU_TIEN = 22.5;
+    private static final double DIEM_TOI_DA = 30.0;
+    private static final double BIEN_DO = 7.5;
+
     // Điểm ưu tiên đối tượng (thang 30)
     private static final Map<String, Double> UT_DOI_TUONG = Map.of(
             "UT1", 2.0, "UT2", 2.0, "UT3", 2.0, "UT4", 2.0,
@@ -41,10 +45,10 @@ public class UuTienService {
         if (mdut == 0) return 0;
 
         double tong = dthgxt + dc;
-        if (tong < 22.5) {
+        if (tong < NGUONG_GIAM_UU_TIEN) {
             return mdut;
         } else {
-            return Math.max(0, ((30 - tong) / 7.5) * mdut);
+            return Math.max(0, ((DIEM_TOI_DA - tong) / BIEN_DO) * mdut);
         }
     }
 }
